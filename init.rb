@@ -26,7 +26,6 @@
 # CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 require File.join(File.dirname(__FILE__), "lib", "view_extensions")
 require File.join(File.dirname(__FILE__), "lib", "controller_extensions")
 require File.join(File.dirname(__FILE__), "lib", "model_extensions")
@@ -45,7 +44,7 @@ if yamlFile
   if yamlFile[RAILS_ENV]
     FACEBOOK.merge!(yamlFile[RAILS_ENV])
   else
-    raise StandardError, "config/facebook.yml exists, but doesn't have a configuration for RAILS_ENV=#{RAILS_ENV}."
+    raise StandardError, "config/facebook.yml exists, but doesn't haveave a configuration for RAILS_ENV=#{RAILS_ENV}."
   end
 else
   raise StandardError, "config/facebook.yml does not exist."
@@ -57,15 +56,16 @@ ActionController::Base.send(:include, RFacebook::Rails::ControllerExtensions)
 ActiveRecord::Base.send(:include, RFacebook::Rails::ModelExtensions)
 
 # inject methods to Rails session management classes
-CGI::Session.send(:include, RFacebook::Rails::SessionExtensions)
+# CGI::Session.send(:include, RFacebook::Rails::SessionExtensions)
+ActionController::Session::AbstractStore.send(:include, RFacebook::Rails::SessionStoreExtensions)
 
 # TODO: document SessionStoreExtensions as API so that anyone can patch their own custom session container in addition to these
-CGI::Session::PStore.send(:include, RFacebook::Rails::SessionStoreExtensions)
-CGI::Session::ActiveRecordStore.send(:include, RFacebook::Rails::SessionStoreExtensions)
-CGI::Session::DRbStore.send(:include, RFacebook::Rails::SessionStoreExtensions)
-CGI::Session::FileStore.send(:include, RFacebook::Rails::SessionStoreExtensions)
-CGI::Session::MemoryStore.send(:include, RFacebook::Rails::SessionStoreExtensions)
-CGI::Session::MemCacheStore.send(:include, RFacebook::Rails::SessionStoreExtensions) if defined?(CGI::Session::MemCacheStore)
+#CGI::Session::PStore.send(:include, RFacebook::Rails::SessionStoreExtensions)
+#CGI::Session::ActiveRecordStore.send(:include, RFacebook::Rails::SessionStoreExtensions)
+#CGI::Session::DRbStore.send(:include, RFacebook::Rails::SessionStoreExtensions)
+#CGI::Session::FileStore.send(:include, RFacebook::Rails::SessionStoreExtensions)
+#CGI::Session::MemoryStore.send(:include, RFacebook::Rails::SessionStoreExtensions)
+#CGI::Session::MemCacheStore.send(:include, RFacebook::Rails::SessionStoreExtensions) if defined?(CGI::Session::MemCacheStore)
 
 # parse for full URLs in facebook.yml (multiple people have made this mistake)
 module RFacebook::Rails
